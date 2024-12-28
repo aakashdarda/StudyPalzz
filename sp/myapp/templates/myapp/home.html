@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="StudyPalz - Your ultimate companion for smart, collaborative learning. Join our community of learners today.">
+    <title>StudyPalz | Smart Collaborative Learning Platform</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #008080;
+            --secondary-color: #005f5f;
+            --accent-color: #00a0a0;
+            --background-light: #f8fafc;
+            --background-gradient: linear-gradient(135deg, #d0e4e2, #008080);
+            --white: #ffffff;
+            --text-primary: #2c3e50;
+            --text-secondary: #6c757d;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+            --font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --transition-speed: 0.3s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--background-gradient);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: var(--text-primary);
+            padding: 20px;
+            line-height: 1.5;
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: 
+                0 10px 40px rgba(0, 128, 128, 0.15),
+                0 0 0 1px rgba(0, 128, 128, 0.05);
+            padding: 48px;
+            width: 100%;
+            max-width: 680px;
+            text-align: center;
+            position: relative;
+            animation: cardAppear 0.6s ease-out;
+        }
+
+        @keyframes cardAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 32px;
+            background: var(--primary-color);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 28px;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.1),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            line-height: 1.2;
+        }
+
+        .tagline {
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            margin-bottom: 3rem;
+            max-width: 540px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 32px;
+            margin: 48px 0;
+            text-align: left;
+        }
+
+        .feature {
+            background: var(--background-light);
+            padding: 32px;
+            border-radius: var(--radius);
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(0, 128, 128, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent, rgba(0, 128, 128, 0.05));
+            opacity: 0;
+            transition: var(--transition-speed);
+        }
+
+        .feature:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 12px 30px rgba(0, 128, 128, 0.15);
+        }
+
+        .feature:hover::before {
+            opacity: 1;
+        }
+
+        .feature h3 {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .feature-icon {
+            background: var(--primary-color);
+            color: var(--white);
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            transition: var(--transition-speed);
+        }
+
+        .feature:hover .feature-icon {
+            transform: scale(1.1);
+            background: var(--accent-color);
+        }
+
+        .feature p {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 48px;
+        }
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px 40px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 1.125rem;
+            transition: all var(--transition-speed);
+            text-decoration: none;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .button-primary {
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+        }
+
+        .button-primary:hover {
+            background: var(--accent-color);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 128, 128, 0.2);
+        }
+
+        .button::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.2),
+                transparent
+            );
+            transform: rotate(45deg);
+            transition: var(--transition-speed);
+            opacity: 0;
+        }
+
+        .button:hover::after {
+            animation: buttonShine 1s;
+            opacity: 1;
+        }
+
+        @keyframes buttonShine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        @media (max-width: 768px) {
+            .card {
+                padding: 32px 24px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
+
+            .tagline {
+                font-size: 1.125rem;
+            }
+
+            .features {
+                grid-template-columns: 1fr;
+                gap: 24px;
+            }
+
+            .feature {
+                padding: 24px;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                gap: 16px;
+            }
+
+            .button {
+                width: 100%;
+                padding: 14px 32px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 2rem;
+            }
+
+            .logo {
+                width: 64px;
+                height: 64px;
+                font-size: 24px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="logo">SP</div>
+        <h1>Welcome to StudyPalz</h1>
+        <p class="tagline">Your ultimate companion for smart, collaborative learning. Join a community of motivated learners today.</p>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>
+                    <span class="feature-icon">📚</span>
+                    Smart Learning
+                </h3>
+                <p>Enhance your understanding with our adaptive quiz system that analyzes your performance and provides personalized improvement strategies.</p>
+            </div>
+            <div class="feature">
+                <h3>
+                    <span class="feature-icon">🔓</span>
+                    Resource Sharing
+                </h3>
+                <p>Access and share curated learning resources tailored to your unique learning style and educational goals.</p>
+            </div>
+            <div class="feature">
+                <h3>
+                    <span class="feature-icon">📈</span>
+                    Progress Tracking
+                </h3>
+                <p>Track your learning journey with detailed analytics, performance insights, and comprehensive progress reports.</p>
+            </div>
+            <div class="feature">
+                <h3>
+                    <span class="feature-icon">🎯</span>
+                    Goal Setting
+                </h3>
+                <p>Define and achieve your academic goals with our structured learning paths, milestones, and achievement system.</p>
+            </div>
+        </div>
+
+        <div class="cta-buttons">
+            <a href="{% url 'signup' %}" class="button button-primary">Get Started Today</a>
+        </div>
+    </div>
+</body>
+</html>

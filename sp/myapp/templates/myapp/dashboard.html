@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <style>
+    :root {
+        --primary-color: #008080;
+        --secondary-color: #005f5f;
+        --background-gradient: linear-gradient(135deg, #f0f7f7 0%, #008080 100%);
+        --card-background: rgba(255, 255, 255, 0.98);
+        --text-primary: #1a2b3c;
+        --text-secondary: #64748b;
+        --border-color: rgba(0, 128, 128, 0.12);
+        --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.06);
+        --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
+        --radius-lg: 24px;
+        --radius-md: 16px;
+        --radius-sm: 12px;
+        --spacing-xs: 0.5rem;
+        --spacing-sm: 1rem;
+        --spacing-md: 1.5rem;
+        --spacing-lg: 2rem;
+        --spacing-xl: 2.5rem;
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: 'Plus Jakarta Sans', sans-serif;
+        background: var(--background-gradient);
+        min-height: 100vh;
+        color: var(--text-primary);
+        padding: var(--spacing-lg);
+        line-height: 1.6;
+    }
+
+    .dashboard-container {
+        max-width: 1440px;
+        margin: 0 auto;
+        opacity: 0;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-xl);
+    }
+
+    .brand-logo {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        text-decoration: none;
+        padding: var(--spacing-sm) var(--spacing-md);
+        background: var(--card-background);
+        border-radius: var(--radius-sm);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .brand-logo:hover {
+        transform: translateY(-2px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .welcome-header {
+        background: var(--card-background);
+        border-radius: var(--radius-lg);
+        padding: var(--spacing-xl);
+        margin-bottom: var(--spacing-xl);
+        box-shadow: var(--shadow-sm);
+        border: 1px solid var(--border-color);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .welcome-header::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 40%;
+        height: 100%;
+        background: linear-gradient(45deg, transparent, rgba(0, 128, 128, 0.08));
+        border-radius: 0 var(--radius-lg) var(--radius-lg) 0;
+    }
+
+    h1 {
+        font-size: 2.75rem;
+        font-weight: 700;
+        color: var(--primary-color);
+        margin-bottom: var(--spacing-sm);
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+
+    .welcome-subtitle {
+        color: var(--text-secondary);
+        font-size: 1.2rem;
+        font-weight: 500;
+        max-width: 600px;
+        line-height: 1.6;
+    }
+
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr));
+        gap: var(--spacing-xl);
+    }
+
+    .card {
+        background: var(--card-background);
+        border-radius: var(--radius-lg);
+        box-shadow: var(--shadow-sm);
+        padding: var(--spacing-xl);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+        opacity: 0;
+        height: 100%;
+    }
+
+    .card:hover {
+        transform: translateY(-4px);
+        box-shadow: var(--shadow-md);
+    }
+
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: var(--spacing-lg);
+        padding-bottom: var(--spacing-md);
+        border-bottom: 2px solid rgba(0, 128, 128, 0.12);
+    }
+
+    h2 {
+        color: var(--primary-color);
+        font-size: 1.5rem;
+        font-weight: 600;
+        letter-spacing: -0.01em;
+    }
+
+    .topic-item {
+        background: rgba(248, 249, 250, 0.9);
+        margin-bottom: var(--spacing-sm);
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease;
+        border: 1px solid var(--border-color);
+    }
+
+    .topic-item:hover {
+        background: rgba(248, 249, 250, 1);
+        transform: translateX(6px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .topic-info {
+        flex: 1;
+    }
+
+    .topic-name {
+        font-weight: 600;
+        color: var(--text-primary);
+        margin-bottom: 0.25rem;
+        font-size: 1.1rem;
+    }
+
+    .button {
+        background: var(--primary-color);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: var(--radius-sm);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: 600;
+        font-size: 0.95rem;
+        letter-spacing: 0.3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .button:hover {
+        background: var(--secondary-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 128, 128, 0.2);
+    }
+
+    .progress-container {
+        background: rgba(248, 249, 250, 0.9);
+        border-radius: var(--radius-sm);
+        overflow: hidden;
+        margin: var(--spacing-lg) 0;
+        height: 8px;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        transition: width 1s ease-in-out;
+    }
+
+    .chart-container {
+        margin-top: var(--spacing-lg);
+        padding: var(--spacing-lg);
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: var(--radius-md);
+        border: 1px solid var(--border-color);
+        height: 300px;
+    }
+
+    .resource-item {
+        padding: var(--spacing-md);
+        border-radius: var(--radius-md);
+        background: rgba(248, 249, 250, 0.9);
+        margin-bottom: var(--spacing-sm);
+        border: 1px solid var(--border-color);
+        transition: all 0.3s ease;
+    }
+
+    .resource-item:hover {
+        background: rgba(248, 249, 250, 1);
+        transform: translateX(4px);
+        box-shadow: var(--shadow-sm);
+    }
+
+    .resource-item a {
+        text-decoration: none;
+        color: var(--text-primary);
+        font-weight: 500;
+        display: block;
+    }
+
+    @media (max-width: 768px) {
+        body {
+            padding: var(--spacing-sm);
+        }
+
+        .header-container {
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            text-align: center;
+        }
+
+        .welcome-header {
+            padding: var(--spacing-lg);
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2rem;
+        }
+
+        .welcome-subtitle {
+            font-size: 1.1rem;
+        }
+
+        .card {
+            padding: var(--spacing-lg);
+        }
+
+        .topic-item {
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            text-align: center;
+        }
+
+        .button {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <div class="header-container">
+            <a href="/" class="brand-logo">StudyPalz</a> 
+            <a href="/select_topic" class="brand-logo">Take another Quiz</a>
+        </div>
+
+        <div class="welcome-header">
+            <h1>Welcome back, {{ user.username }}!</h1>
+            <p class="welcome-subtitle">Track your learning journey and improve your skills with personalized recommendations</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <div class="card-header">
+                    <h2>Areas to Improve</h2>
+                </div>
+                <ul>
+                    {% for topic in weak_topics %}
+                        <li class="topic-item">
+                            <div class="topic-info">
+                                <div class="topic-name">{{ topic.name }}</div>
+                            </div>
+                            <button class="button" onclick="reattemptQuiz('{{ topic.id }}')">
+                                Retry Quiz
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Topics Attempted</h2>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar" id="completionProgress"></div>
+                </div>
+                <ul>
+                    {% for topic in completed_topics %}
+                        <li class="topic-item">
+                            <div class="topic-info">
+                                <div class="topic-name">{{ topic.name }}</div>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Progress Overview</h2>
+                </div>
+                <div class="chart-container">
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+
+            
+
+            <div class="card">
+                <div class="card-header">
+                    <h2>Learning Resources</h2>
+                </div>
+                <ul>
+                    {% for resource in resources %}
+                        <li class="resource-item">
+                            <a href="{{ resource.link }}" target="_blank">
+                                {{ resource.title }}
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            gsap.to('.dashboard-container', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                ease: 'power3.out'
+            });
+
+            gsap.to('.card', {
+                opacity: 1,
+                y: 0,
+                duration: 0.8,
+                stagger: 0.15,
+                ease: 'power3.out'
+            });
+        });
+
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        const progressChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: JSON.parse('{{ progress_dates|escapejs }}'),
+                datasets: [{
+                    label: 'Progress Score',
+                    data: JSON.parse('{{ progress_scores|escapejs }}'),
+                    backgroundColor: 'rgba(0, 128, 128, 0.1)',
+                    borderColor: 'rgba(0, 128, 128, 1)',
+                    borderWidth: 2.5,
+                    tension: 0.4,
+                    fill: true,
+                    pointBackgroundColor: '#fff',
+                    pointBorderColor: 'rgba(0, 128, 128, 1)',
+                    pointBorderWidth: 2,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0, 0, 0, 0.04)',
+                            drawBorder: false
+                        },
+                        ticks: {
+                            padding: 10
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        },
+                        ticks: {
+                            padding: 10
+                        }
+                    }
+                }
+            }
+        });
+
+        const completionPercentage = (completedTopics / totalTopics) * 100;
+        const progressBar = document.getElementById('completionProgress');
+        progressBar.style.width = `${completionPercentage}%`;
+
+        function reattemptQuiz(topicId) {
+            window.location.href = `/reattempt_quiz/${topicId}`;
+        }
+
+        function reviewTopic(topicId) {
+            window.location.href = `/review/${topicId}`;
+        }
+
+        function selectTopic(topicId) {
+            window.location.href = `/select_topic/${topicId}`;
+        }
+    </script>
+</body>
+</html>

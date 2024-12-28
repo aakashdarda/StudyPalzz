@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ topic.name }} Quiz | StudyPalz</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #008080;
+            --secondary-color: #005f5f;
+            --background-gradient: linear-gradient(135deg, #d0e4e2, #008080);
+            --white: #ffffff;
+            --text-color: #2c3e50;
+            --text-muted: #6c757d;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --radius: 20px;
+            --font-family-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-primary);
+            background: var(--background-gradient);
+            min-height: 100vh;
+            color: var(--text-color);
+            padding: 40px 20px;
+            background-size: 400% 400%;
+            animation: gradient 15s ease infinite;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes shine {
+            0% {
+                background-position: -100% 50%;
+            }
+            100% {
+                background-position: 200% 50%;
+            }
+        }
+
+        @keyframes appearUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .quiz-container {
+            max-width: 800px;
+            margin: 0 auto;
+            animation: appearUp 0.8s ease-out forwards;
+        }
+
+        .header {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 28px;
+            border-radius: var(--radius);
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .header:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 40px rgba(0, 128, 128, 0.2);
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 12px;
+            letter-spacing: -0.02em;
+        }
+
+        .timer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 10px 18px;
+            background: rgba(0, 128, 128, 0.1);
+            border-radius: calc(var(--radius) / 2);
+            transition: all var(--transition-speed);
+        }
+
+        .timer:hover {
+            background: rgba(0, 128, 128, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .timer svg {
+            width: 24px;
+            height: 24px;
+            stroke: var(--primary-color);
+        }
+
+        .progress-bar {
+            height: 6px;
+            background: #e1e1e1;
+            border-radius: 3px;
+            margin-top: 12px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 3px;
+        }
+
+        .question-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius);
+            padding: 40px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 32px rgba(0, 128, 128, 0.15);
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-speed);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            animation: appearUp 0.8s ease-out forwards;
+        }
+
+        .question-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 40px rgba(0, 128, 128, 0.2);
+            border-color: rgba(0, 128, 128, 0.1);
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 28px;
+            padding-left: 40px;
+            position: relative;
+            line-height: 1.6;
+        }
+
+        .question-number {
+            position: absolute;
+            left: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.4rem;
+        }
+
+        .options-group {
+            display: grid;
+            gap: 16px;
+        }
+
+        .option-wrapper {
+            position: relative;
+        }
+
+        .option-input {
+            position: absolute;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .option-label {
+            display: block;
+            padding: 18px 24px 18px 60px;
+            border: 2px solid #e1e1e1;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            position: relative;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .option-label:before {
+            content: '';
+            position: absolute;
+            left: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 24px;
+            height: 24px;
+            border: 2px solid #e1e1e1;
+            border-radius: 50%;
+            transition: all var(--transition-speed);
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(0, 128, 128, 0.02);
+            transform: translateY(-1px);
+        }
+
+        .option-input:checked + .option-label {
+            border-color: var(--primary-color);
+            background: rgba(0, 128, 128, 0.05);
+        }
+
+        .option-input:checked + .option-label:before {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            box-shadow: inset 0 0 0 5px var(--white);
+        }
+
+        .option-input:focus + .option-label {
+            box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.1);
+        }
+
+        .submit-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: var(--white);
+            border: none;
+            border-radius: calc(var(--radius) / 2);
+            font-size: 1.2rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-speed);
+            margin-top: 40px;
+            position: relative;
+            overflow: hidden;
+            font-family: var(--font-family-primary);
+        }
+
+        .submit-btn svg {
+            width: 24px;
+            height: 24px;
+            transition: transform 0.3s ease;
+        }
+
+        .submit-btn:hover svg {
+            transform: translateX(4px);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 30px rgba(0, 128, 128, 0.3);
+        }
+
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        .no-questions {
+            text-align: center;
+            padding: 60px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: var(--radius);
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            box-shadow: 0 8px 32px rgba(0, 128, 128, 0.15);
+            animation: appearUp 0.8s ease-out forwards;
+        }
+
+        .no-questions svg {
+            margin-bottom: 20px;
+            stroke: var(--primary-color);
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 20px 15px;
+            }
+            
+            .header {
+                padding: 24px;
+                flex-direction: column;
+                gap: 16px;
+                align-items: flex-start;
+            }
+
+            h1 {
+                font-size: 1.8rem;
+            }
+
+            .question-card {
+                padding: 28px;
+            }
+
+            .question-text {
+                font-size: 1.2rem;
+                padding-left: 35px;
+            }
+
+            .option-label {
+                padding: 16px 20px 16px 54px;
+                font-size: 1.05rem;
+            }
+
+            .option-label:before {
+                left: 20px;
+                width: 22px;
+                height: 22px;
+            }
+
+            .submit-btn {
+                padding: 18px;
+                font-size: 1.1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="quiz-container">
+        <div class="header">
+            <div class="header-content">
+                <h1>{{ topic.name }} Quiz</h1>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progress"></div>
+                </div>
+            </div>
+            <div class="timer" id="timer">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10"/>
+                    <polyline points="12 6 12 12 16 14"/>
+                </svg>
+                00:00
+            </div>
+        </div>
+
+        <form method="post" id="quizForm">
+            {% csrf_token %}
+            {% for question in questions %}
+                <div class="question-card">
+                    <p class="question-text">
+                        <span class="question-number">{{ forloop.counter }}.</span>
+                        <b>{{ question.question_text }}</b>
+                    </p>
+                    <div class="options-group">
+                        <div class="option-wrapper">
+                            <input type="radio" 
+                                   id="q{{ question.id }}_A" 
+                                   name="question_{{ question.id }}" 
+                                   value="A"
+                                   class="option-input question-input"
+                                   required>
+                            <label for="q{{ question.id }}_A" class="option-label">
+                                {{ question.option_a }}
+                            </label>
+                        </div>
+                        <div class="option-wrapper">
+                            <input type="radio" 
+                                   id="q{{ question.id }}_B" 
+                                   name="question_{{ question.id }}" 
+                                   value="B"
+                                   class="option-input question-input"
+                                   required>
+                            <label for="q{{ question.id }}_B" class="option-label">
+                                {{ question.option_b }}
+                            </label>
+                        </div>
+                        <div class="option-wrapper">
+                            <input type="radio" 
+                                   id="q{{ question.id }}_C" 
+                                   name="question_{{ question.id }}" 
+                                   value="C"
+                                   class="option-input question-input"
+                                   required>
+                            <label for="q{{ question.id }}_C" class="option-label">
+                                {{ question.option_c }}
+                            </label>
+                        </div>
+                        <div class="option-wrapper">
+                            <input type="radio" 
+                                   id="q{{ question.id }}_D" 
+                                   name="question_{{ question.id }}" 
+                                   value="D"
+                                   class="option-input question-input"
+                                   required>
+                            <label for="q{{ question.id }}_D" class="option-label">
+                                {{ question.option_d }}
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <div class="no-questions">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="56" height="56">
+                        <circle cx="12" cy="12" r="10"/>
+                        <line x1="12" y1="8" x2="12" y2="12"/>
+                        <line x1="12" y1="16" x2="12" y2="16"/>
+                    </svg>
+                    <p>No questions available for this sub-topic.</p>
+                </div>
+            {% endfor %}
+            
+            <input type="hidden" name="time_taken" id="time_taken">
+            {% if questions %}
+                <button type="submit" class="submit-btn">
+                    <b>Submit Quiz</b>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            {% endif %}
+        </form>
+    </div>
+
+    <script>
+        let startTime = Date.now();
+        let timerInterval;
+
+        // Function to format time as MM:SS
+        function formatTime(seconds) {
+            let minutes = Math.floor(seconds / 60);
+            let remainingSeconds = seconds % 60;
+            return `${String(minutes).padStart(2, '0')}:${String(remainingSeconds).padStart(2, '0')}`;
+        }
+
+        // Update the timer display every second
+        timerInterval = setInterval(() => {
+            let elapsedTime = Math.floor((Date.now() - startTime) / 1000); // seconds
+            document.getElementById('timer').textContent = formatTime(elapsedTime);
+        }, 1000);
+
+        // Set time_taken value when the form is submitted
+        document.getElementById('quizForm').addEventListener('submit', function(event) {
+            let elapsedTime = Math.floor((Date.now() - startTime) / 1000); // seconds
+            document.getElementById('time_taken').value = elapsedTime;
+        });
+
+        const progressBar = document.getElementById('progress');
+const totalQuestions = document.querySelectorAll('.question-card').length;
+
+// Function to update progress
+function updateProgress() {
+    const completedQuestions = document.querySelectorAll('.question-input:checked').length;
+    const progressPercentage = (completedQuestions / totalQuestions) * 100;
+    progressBar.style.width = `${progressPercentage}%`;
+}
+
+// Add event listeners to track user input
+const questionInputs = document.querySelectorAll('.question-input');
+questionInputs.forEach(input => {
+    input.addEventListener('change', updateProgress);
+});
+
+// Initialize progress bar
+updateProgress();
+</script>
+</body>
+</html>

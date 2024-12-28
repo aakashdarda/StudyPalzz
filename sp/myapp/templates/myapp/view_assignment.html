@@ -1,0 +1,16 @@
+{% extends 'myapp/base.html' %}
+
+{% block content %}
+<div class="assignment-detail">
+    <h2>{{ assignment.title }}</h2>
+    <p>{{ assignment.description }}</p>
+    <p>Due date: {{ assignment.due_date }}</p>
+    <a href="{{ assignment.pdf.url }}" target="_blank">Download Assignment</a>
+    <form action="{% url 'submit_assignment' assignment.id %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <label for="submission_file">Upload your submission:</label>
+        <input type="file" name="submission_file" id="submission_file" required>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+{% endblock %}

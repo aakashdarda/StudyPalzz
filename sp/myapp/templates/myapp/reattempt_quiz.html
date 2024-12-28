@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ sub_topic.name }} Quiz</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/inter-ui/3.19.3/inter.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #008080;
+            --secondary-color: #005f5f;
+            --background-gradient: linear-gradient(135deg, #d0e4e2, #008080);
+            --white: #ffffff;
+            --text-color: #2c3e50;
+            --text-muted: #6c757d;
+            --box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            --radius: 16px;
+            --font-family-primary: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            --transition-speed: 0.4s;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-primary);
+            background: var(--background-gradient);
+            min-height: 100vh;
+            padding: 2rem;
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .quiz-card {
+            background: var(--white);
+            border-radius: var(--radius);
+            box-shadow: var(--box-shadow);
+            padding: 2rem;
+            margin-top: 2rem;
+        }
+
+        h1 {
+            color: var(--primary-color);
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2.5rem;
+        }
+
+        .question-container {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: var(--radius);
+            background: #f8f9fa;
+        }
+
+        .question-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+        }
+
+        .options-container {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option-wrapper {
+            position: relative;
+        }
+
+        .radio-input {
+            display: none;
+        }
+
+        .radio-label {
+            display: block;
+            padding: 1rem;
+            background: var(--white);
+            border: 2px solid #e9ecef;
+            border-radius: calc(var(--radius) / 2);
+            cursor: pointer;
+            transition: all var(--transition-speed);
+        }
+
+        .radio-input:checked + .radio-label {
+            border-color: var(--primary-color);
+            background: rgba(0, 128, 128, 0.1);
+        }
+
+        .submit-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            background: var(--primary-color);
+            color: var(--white);
+            border: none;
+            border-radius: calc(var(--radius) / 2);
+            font-size: 1.1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background var(--transition-speed);
+            margin-top: 2rem;
+        }
+
+        .submit-btn:hover {
+            background: var(--secondary-color);
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 1rem;
+            }
+            
+            .quiz-card {
+                padding: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ sub_topic.name }} Quiz</h1>
+        <div class="quiz-card">
+            <form method="post">
+                {% csrf_token %}
+                {% for question in questions %}
+                <div class="question-container">
+                    <p class="question-text">{{ question.question_text }}</p>
+                    <div class="options-container">
+                        <div class="option-wrapper">
+                            <input type="radio" id="q{{ question.id }}_a" name="question_{{ question.id }}" value="A" class="radio-input">
+                            <label for="q{{ question.id }}_a" class="radio-label">{{ question.option_a }}</label>
+                        </div>
+                        <div class="option-wrapper">
+                            <input type="radio" id="q{{ question.id }}_b" name="question_{{ question.id }}" value="B" class="radio-input">
+                            <label for="q{{ question.id }}_b" class="radio-label">{{ question.option_b }}</label>
+                        </div>
+                        <div class="option-wrapper">
+                            <input type="radio" id="q{{ question.id }}_c" name="question_{{ question.id }}" value="C" class="radio-input">
+                            <label for="q{{ question.id }}_c" class="radio-label">{{ question.option_c }}</label>
+                        </div>
+                        <div class="option-wrapper">
+                            <input type="radio" id="q{{ question.id }}_d" name="question_{{ question.id }}" value="D" class="radio-input">
+                            <label for="q{{ question.id }}_d" class="radio-label">{{ question.option_d }}</label>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+                <input type="hidden" name="time_taken" value="0">
+                <button type="submit" class="submit-btn">Submit Quiz</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
